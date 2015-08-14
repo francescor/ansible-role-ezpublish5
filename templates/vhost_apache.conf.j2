@@ -1,0 +1,115 @@
+<VirtualHost {{ item.value.listen }}>
+    DocumentRoot "{{ item.value.root }}/web"
+    ServerName {{ item.value.name }}
+    {% if item.value.aliases is defined %}
+    {% for ServerAlias in item.value.aliases %}
+    ServerAlias {{ ServerAlias }}
+    {% endfor %}
+    {% endif %}
+
+#    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000{{ item.value.root }}/$
+
+    {% if ezpublish_trusted_proxies %}
+    # Force front controller NOT to use built-in reverse proxy.
+    SetEnv USE_HTTP_CACHE 0
+
+    # Configure IP of your Varnish server to be trusted proxy
+    # Replace fake IP address below by your Varnish IP address
+    SetEnv TRUSTED_PROXIES "{{ ezpublish_trusted_proxies }}"
+    {% endif %}
+
+    <Directory "{{ item.value.root }}/web">
+        Options -Indexes +FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+        DirectoryIndex index.php
+    </Directory>
+
+    # Environment.
+    # Possible values: "prod" and "dev" out-of-the-box, other values possible with proper configuration
+    # Defaults to "prod" if omitted (uses SetEnvIf so value can be used in rewrite rules)
+    SetEnv ENVIRONMENT dev
+    SetEnv USE_DEBUGGING 1
+
+    RewriteEngine On
+
+    Rewriterule ^/var/([^/]+/)?storage/images-versioned/.* /index_cluster.php  [L]
+    Rewriterule ^/var/([^/]+/)?storage/images/.* /index_cluster.php  [L]
+    RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
+
+    # Uncomment in FastCGI mode or when using PHP-FPM, to get basic auth working.
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Needed for ci testing, remove in prod.
+    #RewriteCond %{REQUEST_URI} ^/php5-fcgi(.*)
+    #RewriteRule . - [L]
+
+    # v1 rest API is on Legacy
+    RewriteRule ^/api/[^/]+/v1/ /index_rest.php [L]
+
+    RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* - [L]
+    RewriteRule ^/var/([^/]+/)?cache/(texttoimage|public)/.* - [L]
+    RewriteRule ^/design/[^/]+/(stylesheets|images|javascript|fonts)/.* - [L]
+    RewriteRule ^/share/icons/.* - [L]
+    RewriteRule ^/extension/[^/]+/design/[^/]+/(stylesheets|flash|images|lib|javascripts?)/.* - [L]
+    RewriteRule ^/packages/styles/.+/(stylesheets|images|javascript)/[^/]+/.* - [L]
+    RewriteRule ^/packages/styles/.+/thumbnail/.* - [L]
+    RewriteRule ^/var/storage/packages/.* - [L]
+
+    # eztags - speedup ajax calls
+    RewriteRule tags/treemenu/ /index_treemenu_tags.php [L]
+
+    # Makes it possible to place your favicon at the root of your
+    # eZ Publish instance. It will then be served directly.
+    RewriteRule ^/favicon\.ico - [L]
+
+    # Uncomment the line below if you want your favicon be served
+    # from the standard design. You can customize the path to
+    # favicon.ico by changing /design/standard/images/favicon\.ico
+    #RewriteRule ^/favicon\.ico /design/standard/images/favicon.ico [L]
+    RewriteRule ^/design/standard/images/favicon\.ico - [L]
+
+    # Give direct access to robots.txt for use by crawlers (Google,
+    # Bing, Spammers..)
+    RewriteRule ^/robots\.txt - [L]
+
+    # Platform for Privacy Preferences Project ( P3P ) related files
+    # for Internet Explorer
+    # More info here : http://en.wikipedia.org/wiki/P3p
+    RewriteRule ^/w3c/p3p\.xml - [L]
+
+    # Uncomment the following lines when using popup style debug in legacy
+    #RewriteRule ^/var/([^/]+/)?cache/debug\.html.* - [L]
+
+    # Following rule is needed to correctly display assets from eZ Publish5 / Symfony bundles
+    RewriteRule ^/bundles/ - [L]
+
+    # Additional Assetic rules for environments different from dev,
+    # remember to run php ezpublish/console assetic:dump --env=prod
+    RewriteCond %{ENV:ENVIRONMENT} !("dev")
+    RewriteRule ^/(css|js|font)/.*\.(css|js|otf|eot|ttf|svg|woff) - [L]
+
+    # Conditions for enabling webdav and soap interfaces from legacy
+    ## Symlink files into your web folder and correct domain names to be valid server aliases
+    #RewriteCond %{HTTP_HOST} ^webdav\..*
+    #RewriteRule ^(.*) /webdav.php [L]
+    #RewriteCond %{HTTP_HOST} ^soap\..*
+    #RewriteRule ^(.*) /soap.php [L]
+
+    RewriteRule .* /index.php
+
+    <FilesMatch "\.(ico|jpe?g|png|gif|swf|mp4)$">
+        Header set Pragma "public"
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+    <FilesMatch "\.(js|css|html?)$">
+        Header set Cache-Control "max-age=3600, public"
+    </FilesMatch>
+    <FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
+        Header unset Cache-Control
+    </FilesMatch>
+
+    CustomLog "/var/log/{{ ezpublish_apache.daemon }}/ezpublish-access.log"  proxy env=forwarded
+    ErrorLog  "/var/log/{{ ezpublish_apache.daemon }}/ezpublish-error.log"
+</VirtualHost>

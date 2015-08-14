@@ -1,0 +1,4 @@
+---
+ezpublish_php_memory_limit: "256M"
+ezpublish_php_max_execution_time: "300"
+ezpublish_php_apc_shm_size: "128M"

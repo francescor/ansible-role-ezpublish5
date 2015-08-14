@@ -1,0 +1,10 @@
+---
+#- name: Create Apache root directory
+#  file: path={{ item.value.root }} group={{ ezpublish_apache.group }} state=directory mode=0755
+#  with_dict: ezpublish_apache_vhosts
+
+- include: install-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include: install-Debian.yml
+  when: ansible_os_family == 'Debian'

@@ -1,0 +1,6 @@
+---
+- name: Restart Apache
+  service: name={{ ezpublish_apache.daemon }} state=restarted
+
+- name: Restart PHP-FPM
+  service: name={{ ezpublish_fpm.daemon }} state=restarted

@@ -1,0 +1,38 @@
+---
+- name: Debian | Enable contrib and non-free software
+  replace: dest=/etc/apt/sources.list
+           regexp='main$'
+           replace='main contrib non-free'
+
+- name: Debian | Install packages
+  apt: name={{ item }}
+       state=present
+       update_cache=yes
+       cache_valid_time=3600
+  with_items: ezpublish_packages
+
+- name: Debian | Install apache modules
+  apache2_module: name={{ item }}
+                  state=present
+  with_items: ezpublish_apache.mods_enabled
+  notify: Restart Apache
+
+- name: Debian | Add apache vhosts configuration.
+  template:
+    src: vhost_apache.conf.j2
+    dest: "/etc/{{ ezpublish_apache.daemon }}/sites-available/{{ item.value.filename }}"
+  with_dict: ezpublish_apache_vhosts
+
+- name: Debian | Disable default vhost
+  shell: a2dissite default
+  notify: Restart Apache
+
+- name: Debian | Enable new vhost
+  shell: a2ensite {{ item.value.filename }}
+  with_dict: ezpublish_apache_vhosts
+  when: item.value.enabled|bool
+  notify: Restart Apache
+
+- name: Debian | Enable default vhost
+  shell: a2ensite default
+  notify: Restart Apache

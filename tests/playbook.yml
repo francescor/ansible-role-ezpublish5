@@ -1,0 +1,112 @@
+---
+- hosts: all
+  sudo: yes
+  roles:
+    - GMaissa.common
+    - ezpublish
+    - kosssi.composer
+    - geerlingguy.varnish
+    - ThePixelDeveloper.mysql
+  tasks:
+    - name: Check if the repository has already been cloned
+      stat: path={{ ezpublish_apache_vhosts.default.root }}/.git
+      register: git_dir
+
+    - name: Download eZ Publish sources
+      git: repo=https://github.com/ezsystems/ezpublish-community
+           dest={{ ezpublish_apache_vhosts.default.root }}
+           version=v2014.11.1
+      when: git_dir.stat.isdir is not defined or git_dir.stat.isdir != 1
+      notify: Restart Apache
+
+    - name: Check if the .composer diretory exists
+      stat: path=~/.composer
+      register: composer_dir
+
+    - name: Create .composer directory
+      file: path=~/.composer state=directory mode=0775
+      when: composer_dir.stat.isdir is not defined or composer_dir.stat.isdir != 1
+
+    - name: Add github token
+      template: src=templates/composer-auth.json
+                dest=~/.composer/auth.json
+                mode=0644
+
+    - name: Install eZ Publish dependencies
+      shell: composer install -n
+      args:
+        chdir: "{{ ezpublish_apache_vhosts.default.root }}"
+
+    - name: fix permissions on cache dir
+      file: path={{ item.value.root }}/ezpublish/cache
+            owner={{ ezpublish_delivery_account }}
+            group={{ ezpublish_apache.user }}
+            state=directory
+            mode=0775
+            recurse=yes
+      with_dict: ezpublish_apache_vhosts
+
+    - name: fix permissions on logs dir
+      file: path={{ item.value.root }}/ezpublish/logs
+            owner={{ ezpublish_delivery_account }}
+            group={{ ezpublish_apache.group }}
+            state=directory
+            mode=0775
+            recurse=yes
+      with_dict: ezpublish_apache_vhosts
+
+    - name: fix permissions on logs dir
+      shell: chgrp -R {{ ezpublish_apache.group }} {{ item.value.root }}/ezpublish_legacy/settings {{ item.value.root }}/ezpublish_legacy/extension {{ item.value.root }}/ezpublish_legacy/design {{ item.value.root }}/ezpublish/config
+      with_dict: ezpublish_apache_vhosts
+
+    - name: fix permissions on logs dir
+      shell: chmod -R g+w {{ item.value.root }}/ezpublish_legacy/settings {{ item.value.root }}/ezpublish_legacy/extension {{ item.value.root }}/ezpublish_legacy/design {{ item.value.root }}/ezpublish/config
+      with_dict: ezpublish_apache_vhosts
+
+    - name: fix permissions on legacy var dir
+      file: path={{ item.value.root }}/ezpublish_legacy/var
+            owner={{ ezpublish_apache.user }}
+            group={{ ezpublish_apache.group }}
+            state=directory
+            mode=0775
+            recurse=yes
+      with_dict: ezpublish_apache_vhosts
+
+  vars:
+    ezpublish_add_delivery_user: true
+    ezpublish_public_keys:
+      - ~/.ssh/phabriks_dsa.pub
+    ezpublish_apache_port: 81
+    ezpublish_apache_vhosts:
+      default:
+        filename: ezpublish.conf
+        enabled: yes
+        listen: '*:81'
+        root: /var/www/ezpublish
+        name: ezpublish.local
+        aliases:
+          - bo.ezpublish.local
+    ezpublish_trusted_proxies: 127.0.0.1
+
+    varnish_default_vcl_template_path: templates/varnish-4.vcl.j2
+    varnish_default_backend_host: "127.0.0.1"
+    varnish_default_backend_port: "81"
+    varnish_storage: "malloc,256M"
+    varnish_backend_ip: 127.0.0.1
+    mysql_databases:
+      -
+        name: ezpublish
+        state: present
+        collation: utf8_general_ci
+        encoding: utf8
+
+    mysql_users:
+      -
+        username: ezpublish
+        priv: "ezpublish.*:ALL"
+        password: ezpublish
+        state: present
+        append: no
+        host: localhost
+
+    github_token: 7cca7af94c03e3aeb4b620655d18e2a7e288874c

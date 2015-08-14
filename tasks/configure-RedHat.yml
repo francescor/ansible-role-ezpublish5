@@ -1,0 +1,7 @@
+---
+- name: Set Apache listen port
+  replace: dest=/etc/{{ ezpublish_apache.daemon }}/conf/httpd.conf
+           regexp='Listen 80'
+           replace='Listen {{ ezpublish_apache_port }}'
+  when: ezpublish_apache_port != 80
+  notify: Restart Apache

@@ -1,0 +1,20 @@
+---
+ezpublish_apache:
+  daemon: httpd
+  user: apache
+  group: apache
+
+php_packages:
+  - php-fpm
+  - php
+  - php-cli
+  - php-common
+  - php-devel
+  - php-gd
+  - php-mbstring
+  - php-pdo
+  - php-pecl-apc
+  - php-xml
+
+ezpublish_php_fpm_ini_path: /etc/
+ezpublish_php_cli_ini_path: /etc/

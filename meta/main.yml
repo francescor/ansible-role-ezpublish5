@@ -1,0 +1,23 @@
+---
+dependencies: []
+
+galaxy_info:
+  author:
+    - "Guillaume Maïssa"
+  description: Provisioning for eZ Publish on Debian / RHEL OS families
+  company: Freelance
+  license: BSD
+  min_ansible_version: 1.8
+  platforms:
+    - name: Debian
+      versions:
+        - wheezy
+    - name: Redhat
+      versions:
+        - 7
+    - name: CentOS
+      versions:
+        - 7
+  categories:
+   - development
+   - web

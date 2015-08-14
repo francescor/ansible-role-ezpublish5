@@ -1,0 +1,20 @@
+---
+ezpublish_php_date_timezone: "Europe/Paris"
+
+ezpublish_apache_port: 80
+ezpublish_apache_vhosts:
+  default:
+    filename: ezpublish.conf
+    enabled: yes
+    listen: '*:80'
+    root: /var/www/ezpublish
+    name: ezpublish.local
+    aliases:
+      - bo.ezpublish.local
+
+ezpublish_trusted_proxies: false
+
+ezpublish_add_delivery_user: false
+ezpublish_delivery_account: ezpublish
+ezpublish_public_keys:
+  - ~/.ssh/id_rsa.pub

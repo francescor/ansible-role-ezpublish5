@@ -1,0 +1,13 @@
+---
+- name: RedHat | Install packages
+  yum: name={{ item }}
+       state=present
+  with_items: ezpublish_packages
+
+- name: RedHat | Add apache vhosts configuration.
+  template:
+    src: vhost_apache.conf.j2
+    dest: "/etc/{{ ezpublish_apache.daemon }}/conf.d/{{ item.value.filename }}"
+  with_dict: ezpublish_apache_vhosts
+  notify: Restart Apache
+  when: item.value.enabled|bool
