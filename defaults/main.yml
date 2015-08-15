@@ -13,8 +13,3 @@ ezpublish_apache_vhosts:
       - bo.ezpublish.local
 
 ezpublish_trusted_proxies: false
-
-ezpublish_add_delivery_user: false
-ezpublish_delivery_account: ezpublish
-ezpublish_public_keys:
-  - ~/.ssh/id_rsa.pub

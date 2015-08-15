@@ -14,9 +14,3 @@
   tags:
     - ezpublish
     - configure
-
-- include: delivery-user.yml
-  when: ezpublish_add_delivery_user
-  tags:
-    - ezpublish
-    - delivery-user

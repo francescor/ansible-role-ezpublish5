@@ -73,9 +73,6 @@
       with_dict: ezpublish_apache_vhosts
 
   vars:
-    ezpublish_add_delivery_user: true
-    ezpublish_public_keys:
-      - ~/.ssh/phabriks_dsa.pub
     ezpublish_apache_port: 81
     ezpublish_apache_vhosts:
       default:
