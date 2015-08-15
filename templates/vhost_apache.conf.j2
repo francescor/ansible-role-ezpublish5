@@ -29,13 +29,12 @@
     # Environment.
     # Possible values: "prod" and "dev" out-of-the-box, other values possible with proper configuration
     # Defaults to "prod" if omitted (uses SetEnvIf so value can be used in rewrite rules)
-    SetEnv ENVIRONMENT dev
-    SetEnv USE_DEBUGGING 1
+    SetEnv ENVIRONMENT prod
+    SetEnv USE_DEBUGGING 0
 
     RewriteEngine On
 
-    Rewriterule ^/var/([^/]+/)?storage/images-versioned/.* /index_cluster.php  [L]
-    Rewriterule ^/var/([^/]+/)?storage/images/.* /index_cluster.php  [L]
+    RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* /index.php [L]
     RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
 
     # Uncomment in FastCGI mode or when using PHP-FPM, to get basic auth working.
