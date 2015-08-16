@@ -1,6 +1,6 @@
 eZ Publish
 ==========
-[![Travis branch](https://img.shields.io/travis/GMaissa/ansible-role-ezpublish/master.svg)](https://travis-ci.org/GMaissa/ansible-role-ezpublish5)
+[![Travis branch](https://img.shields.io/travis/GMaissa/ansible-role-ezpublish5/master.svg)](https://travis-ci.org/GMaissa/ansible-role-ezpublish5)
 
 This Ansible role configures your environment for [eZ Publish](http://www.ez.no).
 
