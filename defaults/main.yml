@@ -1,4 +1,5 @@
 ---
+# Define php timezone
 ezpublish_php_date_timezone: "Europe/Paris"
 
 ezpublish_apache_port: 80
@@ -11,7 +12,14 @@ ezpublish_apache_vhost:
   aliases:
     - bo.ezpublish.local
 
+# Define trusted proxies
 ezpublish_trusted_proxies: false
+
+# Enable|disable ezpublish cluster mode
 ezpublish_cluster_mode: false
+
+# Define ezpublish environment
 ezpublish_environment: prod
+
+# Enable|disable debug mode
 ezpublish_debug_mode: 0
