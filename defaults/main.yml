@@ -2,7 +2,10 @@
 # Define php timezone
 ezpublish_php_date_timezone: "Europe/Paris"
 
+# Define Apache listen port
 ezpublish_apache_port: 80
+
+# eZ Publish vhost configuration
 ezpublish_apache_vhost:
   filename: ezpublish.conf
   enabled: yes
@@ -12,19 +15,19 @@ ezpublish_apache_vhost:
   aliases:
     - bo.ezpublish.local
 
-# Define trusted proxies
+# Define trusted proxies for eZ Publish
 ezpublish_trusted_proxies: false
 
-# Enable|disable ezpublish cluster mode
+# Enable|disable eZ Publish cluster mode
 ezpublish_cluster_mode: false
 
-# Define ezpublish environment
+# Define eZ Publish environment
 ezpublish_environment: prod
 
-# Enable|disable debug mode
+# Enable|disable eZ Publihs debug mode
 ezpublish_debug_mode: 0
 
-# Download ezpublish
+# Download eZ Publish sources
 ezpublish_download: false
 
 # eZ Publish version to download
