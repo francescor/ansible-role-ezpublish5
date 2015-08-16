@@ -14,3 +14,9 @@
   tags:
     - ezpublish
     - configure
+
+- include: download.yml
+  tags:
+    - ezpublish
+    - download
+  when: ezpublish_download|bool

@@ -23,3 +23,9 @@ ezpublish_environment: prod
 
 # Enable|disable debug mode
 ezpublish_debug_mode: 0
+
+# Download ezpublish
+ezpublish_download: false
+
+# eZ Publish version to download
+ezpublish_version: v2014.11.1
