@@ -17,7 +17,7 @@
   when: ezpublish_apache_port != 80
   notify: Restart Apache
 
-- name: Set Apache listen port
+- name: Set Apache VirtualHost listen port
   replace: dest=/etc/{{ ezpublish_apache.daemon }}/ports.conf
            regexp='NameVirtualHost *:80'
            replace='NameVirtualHost *:{{ ezpublish_apache_port }}'
