@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - ansible-role-ezpublish5
+  vars:
+    # eZ Publish configuration
+    ezpublish_apache_port: 80
+    ezpublish_apache_vhost:
+      filename: ezpublish.conf
+      enabled: yes
+      listen: '*:80'
+      root: /var/www/ezpublish
+      name: localhost
+    ezpublish_environment: dev
+    ezpublish_debug_mode: 1
+    ezpublish_download: true
+    ezpublish_version: v2014.11.1

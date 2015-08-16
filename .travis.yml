@@ -1,0 +1,37 @@
+---
+sudo: required
+language: python
+python: "2.7"
+
+env:
+  - PLAYBOOK=tests/playbook-travis.yml INVENTORY=tests/inventory-travis
+  - ANSIBLE_VERSION=1.6
+  - ANSIBLE_VERSION=1.7
+  - ANSIBLE_VERSION=1.8
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt python-pycurl
+
+install:
+  # Install Ansible.
+  - pip install ansible==$ANSIBLE_VERSION
+
+before_script:
+  # Add ansible.cfg to pick up roles path.
+  - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
+  - echo localhost > $INVENTORY
+
+script:
+  # Check playbook's syntax.
+  - "ansible-playbook $PLAYBOOK -i $INVENTORY --syntax-check"
+
+  # Run the role/playbook with ansible-playbook.
+  - "ansible-playbook $PLAYBOOK -i $INVENTORY --connection=local --sudo"
+
+#  # Run the role/playbook again, checking to make sure it's idempotent.
+#  - >
+#    ansible-playbook $PLAYBOOK -i $INVENTORY --connection=local --sudo
+#    | grep -q 'changed=0.*failed=0'
+#    && (echo 'Idempotence test: pass' && exit 0)
+#    || (echo 'Idempotence test: fail' && exit 1)
