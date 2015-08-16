@@ -7,17 +7,6 @@
     {% endfor %}
     {% endif %}
 
-#    ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000{{ item.value.root }}/$
-
-    {% if ezpublish_trusted_proxies %}
-    # Force front controller NOT to use built-in reverse proxy.
-    SetEnv USE_HTTP_CACHE 0
-
-    # Configure IP of your Varnish server to be trusted proxy
-    # Replace fake IP address below by your Varnish IP address
-    SetEnv TRUSTED_PROXIES "{{ ezpublish_trusted_proxies }}"
-    {% endif %}
-
     <Directory "{{ item.value.root }}/web">
         Options -Indexes +FollowSymLinks
         AllowOverride None
@@ -25,6 +14,15 @@
         Allow from all
         DirectoryIndex index.php
     </Directory>
+
+    {% if ezpublish_trusted_proxies|bool %}
+    # Force front controller NOT to use built-in reverse proxy.
+    SetEnv USE_HTTP_CACHE 0
+
+    # Configure IP of your Varnish server to be trusted proxy
+    # Replace fake IP address below by your Varnish IP address
+    SetEnv TRUSTED_PROXIES "{{ ezpublish_trusted_proxies }}"
+    {% endif %}
 
     # Environment.
     # Possible values: "prod" and "dev" out-of-the-box, other values possible with proper configuration
@@ -34,7 +32,7 @@
 
     RewriteEngine On
 
-    {% if ezpublish_cluster_mode %}
+    {% if ezpublish_cluster_mode|bool %}
     RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* /index.php [L]
     RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
     {% else %}
@@ -62,7 +60,7 @@
     RewriteRule ^/var/storage/packages/.* - [L]
 
     # eztags - speedup ajax calls
-    RewriteRule tags/treemenu/ /index_treemenu_tags.php [L]
+    #RewriteRule tags/treemenu/ /index_treemenu_tags.php [L]
 
     # Makes it possible to place your favicon at the root of your
     # eZ Publish instance. It will then be served directly.
