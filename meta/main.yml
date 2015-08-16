@@ -7,7 +7,7 @@ galaxy_info:
   description: Provisioning for eZ Publish on Debian / RHEL OS families
   company: Freelance
   license: BSD
-  min_ansible_version: 1.8
+  min_ansible_version: 1.6
   platforms:
     - name: Debian
       versions:
