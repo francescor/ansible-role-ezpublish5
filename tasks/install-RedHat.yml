@@ -7,7 +7,6 @@
 - name: RedHat | Add apache vhosts configuration.
   template:
     src: vhost_apache.conf.j2
-    dest: "/etc/{{ ezpublish_apache.daemon }}/conf.d/{{ item.value.filename }}"
-  with_dict: ezpublish_apache_vhosts
+    dest: "/etc/{{ ezpublish_apache.daemon }}/conf.d/{{ ezpublish_apache_vhost.filename }}"
   notify: Restart Apache
-  when: item.value.enabled|bool
+  when: ezpublish_apache_vhost.enabled|bool

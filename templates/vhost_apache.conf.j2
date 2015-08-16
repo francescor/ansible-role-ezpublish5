@@ -1,20 +1,19 @@
-<VirtualHost {{ item.value.listen }}>
-    DocumentRoot "{{ item.value.root }}/web"
-    ServerName {{ item.value.name }}
-    {% if item.value.aliases is defined %}
-    {% for ServerAlias in item.value.aliases %}
+<VirtualHost {{ ezpublish_apache_vhost.listen }}>
+    DocumentRoot "{{ ezpublish_apache_vhost.root }}/web"
+    ServerName {{ ezpublish_apache_vhost.name }}
+    {% if ezpublish_apache_vhost.aliases is defined %}
+    {% for ServerAlias in ezpublish_apache_vhost.aliases %}
     ServerAlias {{ ServerAlias }}
     {% endfor %}
     {% endif %}
 
-    <Directory "{{ item.value.root }}/web">
+    <Directory "{{ ezpublish_apache_vhost.root }}/web">
         Options -Indexes +FollowSymLinks
         AllowOverride None
         Order allow,deny
         Allow from all
         DirectoryIndex index.php
     </Directory>
-
     {% if ezpublish_trusted_proxies|bool %}
     # Force front controller NOT to use built-in reverse proxy.
     SetEnv USE_HTTP_CACHE 0
@@ -31,11 +30,12 @@
     SetEnv USE_DEBUGGING {{ ezpublish_debug_mode }}
 
     RewriteEngine On
-
     {% if ezpublish_cluster_mode|bool %}
+
     RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* /index.php [L]
     RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
     {% else %}
+
     #RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* /index.php [L]
     #RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
     {% endif %}
