@@ -2,6 +2,7 @@
 - name: Find APC configuration file
   shell: find /etc -name 'apc.ini'
   register: apc_files
+  changed_when: false
 
 - name: Set APC shm_size
   lineinfile: dest={{ item }}

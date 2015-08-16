@@ -21,16 +21,19 @@
   template:
     src: vhost_apache.conf.j2
     dest: "/etc/{{ ezpublish_apache.daemon }}/sites-available/{{ ezpublish_apache_vhost.filename }}"
+  register: add_vhost
 
 - name: Debian | Disable default vhost
   shell: a2dissite default
+  when: add_vhost.changed
   notify: Restart Apache
 
 - name: Debian | Enable new vhost
   shell: a2ensite {{ ezpublish_apache_vhost.filename }}
-  when: ezpublish_apache_vhost.enabled|bool
+  when: ezpublish_apache_vhost.enabled|bool and add_vhost.changed
   notify: Restart Apache
 
 - name: Debian | Enable default vhost
   shell: a2ensite default
+  when: add_vhost.changed
   notify: Restart Apache

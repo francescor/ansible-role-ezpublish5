@@ -7,11 +7,12 @@
     get_url: url=https://github.com/ezsystems/ezpublish-community/archive/{{ ezpublish_version }}.tar.gz
              dest=/tmp/ezpublish.tar.gz
     when: legacy_dir.stat.isdir is not defined or legacy_dir.stat.isdir != 1
+    register: download_src
 
   - name: Create Apache root directory
     file: path={{ ezpublish_apache_vhost.root }} group={{ ezpublish_apache.group }} state=directory mode=0755
 
   - name: Untar eZ Publish sources
     command: tar zxf /tmp/ezpublish.tar.gz -C {{ ezpublish_apache_vhost.root }}  --strip-components 1
-    when: legacy_dir.stat.isdir is not defined or legacy_dir.stat.isdir != 1
+    when: download_src.changed
     notify: Restart Apache
