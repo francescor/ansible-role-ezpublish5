@@ -13,3 +13,6 @@ ezpublish_apache_vhosts:
       - bo.ezpublish.local
 
 ezpublish_trusted_proxies: false
+ezpublish_cluster_mode: false
+ezpublish_environment: prod
+ezpublish_debug_mode: 0

@@ -29,13 +29,18 @@
     # Environment.
     # Possible values: "prod" and "dev" out-of-the-box, other values possible with proper configuration
     # Defaults to "prod" if omitted (uses SetEnvIf so value can be used in rewrite rules)
-    SetEnv ENVIRONMENT prod
-    SetEnv USE_DEBUGGING 0
+    SetEnv ENVIRONMENT {{ ezpublish_environment }}
+    SetEnv USE_DEBUGGING {{ ezpublish_debug_mode }}
 
     RewriteEngine On
 
+    {% if ezpublish_cluster_mode %}
     RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* /index.php [L]
     RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
+    {% else %}
+    #RewriteRule ^/var/([^/]+/)?storage/images(-versioned)?/.* /index.php [L]
+    #RewriteRule ^/var/([^/]+/)?cache/public/(stylesheets|javascript) /index_cluster.php  [L]
+    {% endif %}
 
     # Uncomment in FastCGI mode or when using PHP-FPM, to get basic auth working.
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
