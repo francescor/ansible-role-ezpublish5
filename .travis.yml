@@ -28,7 +28,8 @@ script:
   # Run the role/playbook with ansible-playbook.
   - "ansible-playbook $PLAYBOOK -i $INVENTORY --connection=local --sudo"
 
-#  # Run the role/playbook again, checking to make sure it's idempotent.
+  # Run the role/playbook again, checking to make sure it's idempotent.
+  - "ansible-playbook $PLAYBOOK -i $INVENTORY --connection=local --sudo"
 #  - >
 #    ansible-playbook $PLAYBOOK -i $INVENTORY --connection=local --sudo
 #    | grep -q 'changed=0.*failed=0'
