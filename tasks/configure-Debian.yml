@@ -1,12 +1,12 @@
 ---
 - name: Find APC configuration file
-  find:  paths="/etc" patterns='apc.ini'
-  register: apc_config
+  shell: find /etc -name 'apc.ini'
+  register: apc_files
 
 - name: Set APC shm_size
-  lineinfile: dest={{ item.path }}
+  lineinfile: dest={{ item }}
               line='apc.shm_size = {{ ezpublish_php_apc_shm_size }}'
-  with_items: apc_config.files
+  with_items: apc_files.stdout_lines
   notify: Restart Apache
 
 - name: Set Apache listen port
