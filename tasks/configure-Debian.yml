@@ -12,3 +12,15 @@
            replace='NameVirtualHost *:{{ ezpublish_apache_port }}'
   when: ezpublish_apache_port != 80
   notify: Restart Apache
+
+- name: Debian | Add apache vhosts configuration.
+  template:
+    src: vhost_apache.conf.j2
+    dest: "/etc/{{ ezpublish_apache.daemon }}/sites-available/{{ ezpublish_apache_vhost.filename }}"
+  register: add_vhost
+
+- name: Debian | Enable new vhost
+  shell: a2ensite {{ ezpublish_apache_vhost.filename }}
+  when: ezpublish_apache_vhost.enabled|bool and add_vhost.changed
+  notify: Restart Apache
+

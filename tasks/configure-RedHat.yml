@@ -5,3 +5,10 @@
            replace='Listen {{ ezpublish_apache_port }}'
   when: ezpublish_apache_port != 80
   notify: Restart Apache
+
+- name: RedHat | Add apache vhosts configuration.
+  template:
+    src: vhost_apache.conf.j2
+    dest: "/etc/{{ ezpublish_apache.daemon }}/conf.d/{{ ezpublish_apache_vhost.filename }}"
+  notify: Restart Apache
+  when: ezpublish_apache_vhost.enabled|bool
