@@ -1,23 +1,28 @@
 ---
+- name: Find PHP configuration file
+  shell: find /etc -name 'php.ini'
+  register: php_config_files
+  changed_when: false
+
 - name: Set PHP memory limit
-  replace: dest={{ ezpublish_php_apache_ini_path }}/php.ini
+  replace: dest={{ item }}
            regexp='memory_limit =.*'
            replace='memory_limit={{ ezpublish_php_memory_limit }}'
+  with_items: php_config_files.stdout_lines
   notify: Restart Apache
 
 - name: Set PHP max execution time
-  replace: dest={{ ezpublish_php_apache_ini_path }}/php.ini
+  replace: dest={{ item }}
            regexp='max_execution_time =.*'
            replace='max_execution_time={{ ezpublish_php_max_execution_time }}'
+  with_items: php_config_files.stdout_lines
   notify: Restart Apache
 
 - name: Set PHP timezone
-  replace: dest={{ item }}/php.ini
+  replace: dest={{ item }}
            regexp=';date.timezone =.*'
            replace='date.timezone = {{ ezpublish_php_date_timezone }}'
-  with_items:
-    - "{{ ezpublish_php_apache_ini_path }}"
-    - "{{ ezpublish_php_cli_ini_path }}"
+  with_items: php_config_files.stdout_lines
   notify: Restart Apache
 
 - include: configure-RedHat.yml

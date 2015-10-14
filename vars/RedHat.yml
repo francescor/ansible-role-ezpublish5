@@ -16,5 +16,3 @@ php_packages:
   - php-pecl-apc
   - php-xml
 
-ezpublish_php_fpm_ini_path: /etc/
-ezpublish_php_cli_ini_path: /etc/

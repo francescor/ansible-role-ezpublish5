@@ -36,6 +36,3 @@ ezpublish_packages:
   - libxml2
   - curl
 
-ezpublish_php_fpm_ini_path: /etc/php5/fpm/
-ezpublish_php_apache_ini_path: /etc/php5/apache2/
-ezpublish_php_cli_ini_path: /etc/php5/cli/
