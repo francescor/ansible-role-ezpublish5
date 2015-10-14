@@ -40,3 +40,6 @@ ezpublish_download: false
 
 # eZ Publish version to download
 ezpublish_version: v2014.11.1
+
+# Additional packages
+ezpublish_additional_packages: []

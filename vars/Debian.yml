@@ -30,7 +30,6 @@ ezpublish_packages:
   - php-apc
   - php5-xsl
   - php5-gd
-  - php5-memcached
   - imagemagick
   - gzip
   - libxml2
