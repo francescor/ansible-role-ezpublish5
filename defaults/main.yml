@@ -1,4 +1,12 @@
 ---
+# Define php session save handler
+# Value to false will leave the default value
+ezpublish_php_session_save_handler: false
+
+# Define php session save path
+# Value to false will leave the default value
+ezpublish_php_session_save_path: false
+
 # Define php timezone
 ezpublish_php_date_timezone: "Europe/Paris"
 
