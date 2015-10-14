@@ -25,6 +25,17 @@
   with_items: php_config_files.stdout_lines
   notify: Restart Apache
 
+- name: Find APC configuration file
+  shell: find /etc -name 'apc.ini'
+  register: apc_files
+  changed_when: false
+
+- name: Set APC shm_size
+  lineinfile: dest={{ item }}
+              line='apc.shm_size = {{ ezpublish_php_apc_shm_size }}'
+  with_items: apc_files.stdout_lines
+  notify: Restart Apache
+
 - include: configure-RedHat.yml
   when: ansible_os_family == 'RedHat'
 

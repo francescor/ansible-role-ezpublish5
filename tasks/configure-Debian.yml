@@ -1,15 +1,4 @@
 ---
-- name: Find APC configuration file
-  shell: find /etc -name 'apc.ini'
-  register: apc_files
-  changed_when: false
-
-- name: Set APC shm_size
-  lineinfile: dest={{ item }}
-              line='apc.shm_size = {{ ezpublish_php_apc_shm_size }}'
-  with_items: apc_files.stdout_lines
-  notify: Restart Apache
-
 - name: Set Apache listen port
   replace: dest=/etc/{{ ezpublish_apache.daemon }}/ports.conf
            regexp='Listen 80'
