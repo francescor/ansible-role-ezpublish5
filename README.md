@@ -14,6 +14,14 @@ No external requirements exists for this role.
 Role Variables
 --------------
 
+    # Define php session save handler
+    # Value to false will leave the default value
+    ezpublish_php_session_save_handler: false
+
+    # Define php session save path
+    # Value to false will leave the default value
+    ezpublish_php_session_save_path: false
+
     # Define php timezone
     ezpublish_php_date_timezone: "Europe/Paris"
 
@@ -47,6 +55,9 @@ Role Variables
 
     # eZ Publish version to download
     ezpublish_version: v2014.11.1
+
+    # Additional packages
+    ezpublish_additional_packages: []
 
 
 License
