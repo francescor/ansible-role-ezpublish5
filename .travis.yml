@@ -8,6 +8,8 @@ env:
   - ANSIBLE_VERSION=1.7 PLAYBOOK=tests/playbook-travis.yml INVENTORY=tests/inventory-travis
   - ANSIBLE_VERSION=1.8 PLAYBOOK=tests/playbook-travis.yml INVENTORY=tests/inventory-travis
   - ANSIBLE_VERSION=1.9.2 PLAYBOOK=tests/playbook-travis.yml INVENTORY=tests/inventory-travis
+  - ANSIBLE_VERSION=1.9.3 PLAYBOOK=tests/playbook-travis.yml INVENTORY=tests/inventory-travis
+  - ANSIBLE_VERSION=1.9.4 PLAYBOOK=tests/playbook-travis.yml INVENTORY=tests/inventory-travis
 
 before_install:
   - sudo apt-get update -qq
