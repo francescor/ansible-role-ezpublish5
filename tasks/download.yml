@@ -4,7 +4,9 @@
     register: legacy_dir
 
   - name: Download eZ Publish sources
-    get_url: url=https://github.com/ezsystems/ezpublish-community/archive/{{ ezpublish_version }}.tar.gz
+    #get_url: url=https://github.com/ezsystems/ezpublish-community/archive/{{ ezpublish_version }}.tar.gz
+    # temporary fix
+    get_url: url=http://share.ez.no/content/download/161941/957952/version/8/file/ezpublish5_community_project-2014.11.1-gpl-full.tar.gz
              dest=/tmp/ezpublish.tar.gz
     when: legacy_dir.stat.isdir is not defined or legacy_dir.stat.isdir != 1
     register: download_src
